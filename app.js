@@ -4,9 +4,12 @@ import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import logger from './utils/logger'
 import boom from 'express-boom'
+import mongoose from 'mongoose'
+import config from 'config'
 
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
+// import routes controllers
+import indexRouter from './routes/index'
+import userRouter from './routes/user'
 
 var app = express()
 
@@ -16,8 +19,18 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(boom())
 
+logger.info(config.get('mongoURI'))
+
+// mongodb connection
+mongoose
+  .connect(config.get('mongoURI'),
+    { useNewUrlParser: true, useCreateIndex: true })
+  .then(() => logger.info(`Connected to MongoDB at: ${config.get('mongoURI')}`))
+  .catch(err => logger.error(err))
+
+// define routes to controllers
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/user', userRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

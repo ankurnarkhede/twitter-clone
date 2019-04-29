@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb://ankur:Password1@ds147946.mlab.com:47946/postman-assignment",
+  "secretOrKey": "secret"
+}
