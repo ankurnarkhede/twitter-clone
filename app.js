@@ -10,6 +10,7 @@ import config from 'config'
 // import routes controllers
 import authRouter from './routes/auth'
 import userRouter from './routes/user'
+import tweetRouter from './routes/tweet'
 
 var app = express()
 
@@ -31,6 +32,7 @@ mongoose
 // define routes to controllers
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
+app.use('/tweet', tweetRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

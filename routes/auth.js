@@ -24,7 +24,6 @@ router.post('/register', (req, res) => {
           username: req.body.username,
           password: req.body.password
         })
-        console.log('NEWUSER=====>', newUser)
 
         bcrypt.genSalt(10, (err, salt) => {
           if (err) throw err

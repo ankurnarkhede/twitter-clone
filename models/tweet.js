@@ -3,6 +3,7 @@
  */
 
 import mongoose from 'mongoose'
+
 const Schema = mongoose.Schema
 
 const TweetSchema = new Schema({
@@ -11,20 +12,17 @@ const TweetSchema = new Schema({
     ref: 'users'
   },
   text: {
-    type: String,
-    required: true
+    type: String
   },
   likes: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'users',
-      unique: true
+      ref: 'users'
     }
   ],
   parentTweet: {
     type: Schema.Types.ObjectId,
-    ref: 'tweets',
-    unique: true
+    ref: 'tweets'
   },
   isRetweet: {
     type: Boolean,
@@ -40,4 +38,4 @@ const TweetSchema = new Schema({
   }
 }, { timestamps: true })
 
-module.exports = mongoose.model('tweets', TweetSchema)
+module.exports = mongoose.model('tweets1', TweetSchema)

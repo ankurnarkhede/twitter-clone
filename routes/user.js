@@ -23,7 +23,6 @@ router.get('/follow/:username', checkAuth, (req, res) => {
           user.follows.push(followUser._id)
           user.save()
             .then(success => {
-              console.log('SUCCESS=====>', success)
               return res.json({
                 message: `Followed ${followUser.username} successfully`
               })
@@ -59,10 +58,8 @@ router.get('/unfollow/:username', checkAuth, (req, res) => {
             return res.json({
               message: `Unfollowed ${unfollowUser.username} successfully`
             })
-          } else {
-            return res.boom.badData(
-              `User ${req.params.username} not followed`)
           }
+          return res.boom.badData(`User ${req.params.username} not followed`)
         })
         .catch(err => {
           logger.error(err)
