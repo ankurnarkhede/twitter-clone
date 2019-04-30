@@ -1,4 +1,7 @@
 # postman-assignment
+
+[![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
+
 A REST API in Node.js that implememts basic twitter functionalities.
 
 ## Contents
@@ -22,6 +25,7 @@ This is a REST API developed using Node.js that implememts basic Twitter functio
 - Node.js
 
 ## Documentation
+
 # Install Dependencies
 ```bash
 npm install
@@ -33,6 +37,8 @@ npm start
 ```
 
 # Routes
+The application logs are stored to logs/app.log file.
+
 ```
     Route: http://localhost:3000/auth/register/
     Request Type: POST
