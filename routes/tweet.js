@@ -14,6 +14,7 @@ const router = express.Router()
 
 router.get('/:tweet_id', checkAuth, (req, res) => {
   Tweet.findOne({ _id: req.params.tweet_id, status: true })
+    .populate('parentTweet', 'text')
     .then(tweet => {
       if (tweet) {
         return res.json(tweet)

@@ -22,7 +22,7 @@ const TweetSchema = new Schema({
   ],
   parentTweet: {
     type: Schema.Types.ObjectId,
-    ref: 'tweets'
+    ref: 'tweets1'
   },
   isRetweet: {
     type: Boolean,
