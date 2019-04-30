@@ -12,21 +12,6 @@ import validateTweetInput from '../validation/tweet'
 
 const router = express.Router()
 
-router.get('/:tweet_id', checkAuth, (req, res) => {
-  Tweet.findOne({ _id: req.params.tweet_id, status: true })
-    .populate('parentTweet', 'text')
-    .then(tweet => {
-      if (tweet) {
-        return res.json(tweet)
-      } else {
-        return res.boom.badData('Tweet not found')
-      }
-    })
-    .catch(err => {
-      return res.boom.badData(err)
-    })
-})
-
 router.post('/', checkAuth, (req, res) => {
   let { errors, isValid } = validateTweetInput(req.body)
 
@@ -47,6 +32,21 @@ router.post('/', checkAuth, (req, res) => {
     .catch(err => {
       logger.error(err)
       return res.boom.badImplementation('Server Error', { attributes: err })
+    })
+})
+
+router.get('/:tweet_id', checkAuth, (req, res) => {
+  Tweet.findOne({ _id: req.params.tweet_id, status: true })
+    .populate('parentTweet', 'text')
+    .then(tweet => {
+      if (tweet) {
+        return res.json(tweet)
+      } else {
+        return res.boom.badData('Tweet not found')
+      }
+    })
+    .catch(err => {
+      return res.boom.badData(err)
     })
 })
 
