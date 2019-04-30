@@ -36,7 +36,7 @@ npm start
 ```
     Route: http://localhost:3000/auth/register/
     Request Type: POST
-    Data:
+    Body:
         {
             "username":"johndoe",
             "password":"qwertyuiop"
@@ -46,7 +46,7 @@ npm start
 ```
     Route: http://localhost:3000/auth/login/
     Request Type: POST
-    Data:
+    Body:
         {
             "username":"johndoe",
             "password":"qwertyuiop"
@@ -58,7 +58,7 @@ npm start
     Request Type: POST
     Headers: 
             Content-Type: application/json
-    Data:
+    Body:
         {
             "username":"johndoe",
             "password":"qwertyuiop"
@@ -70,24 +70,85 @@ npm start
     Request Type: GET
     Headers: 
         Content-Type: application/json
-        Authorization: Bearer {{token}}
-        
+        Authorization: Bearer {{token}}      
 ```
 
 ```
     Route: http://localhost:3000/user/follow/:username
     Request Type: GET
     Headers: 
-        Content-Type: application/json
         Authorization: Bearer {{token}}
-
 ```
 
 ```
     Route: http://localhost:3000/user/unfollow/:username
     Request Type: GET
     Headers: 
-        Content-Type: application/json
         Authorization: Bearer {{token}}
+```
 
 ```
+    Route: http://localhost:3000/tweet
+    Request Type: POST
+    Headers: 
+        Content-Type: application/json
+        Authorization: Bearer {{token}}
+    Body:
+        {
+            "text":"Tweet content"
+        }
+```
+
+```
+    Route: http://localhost:3000/tweet/:tweet_id
+    Request Type: GET
+    Headers: 
+        Authorization: Bearer {{token}
+```
+
+```
+    Route: http://localhost:3000/tweet/:tweet_id
+    Request Type: DELETE
+    Headers: 
+        Authorization: Bearer {{token}}
+```
+
+```
+    Route: http://localhost:3000/tweet/like/:tweet_id
+    Request Type: GET
+    Headers: 
+        Authorization: Bearer {{token}}
+```
+
+```
+    Route: http://localhost:3000/tweet/unlike/:tweet_id
+    Request Type: GET
+    Headers: 
+        Authorization: Bearer {{token}}
+```
+
+```
+    Route: http://localhost:3000/tweet/reply/:tweet_id
+    Request Type: POST
+    Headers: 
+        Content-Type: application/json
+        Authorization: Bearer {{token}}
+    Body:
+        {
+            "text":"Tweet content"
+        }
+```
+
+```
+    Route: http://localhost:3000/tweet/retweet/:tweet_id
+    Request Type: POST
+    Headers: 
+        Authorization: Bearer {{token}}
+```
+
+
+
+
+
+
+
