@@ -1,99 +1,78 @@
 import express from 'express'
-import bcrypt from 'bcrypt'
-import config from 'config'
-import jwt from 'jsonwebtoken'
-
 import logger from '../utils/logger'
 import User from '../models/user'
 
 // import validations
 import checkAuth from '../utils/check-auth'
-import validateLoginInput from '../validation/login'
 
 const router = express.Router()
 
-router.post('/register', (req, res) => {
-  let errors = {}
-  User.findOne({ username: req.body.username })
+router.get('/follow/:username', checkAuth, (req, res) => {
+  User.findOne({ username: req.user.username })
+    .select('_id username follows')
     .then(user => {
-      if (user) {
-        errors.username = 'Username already exists'
-        return res.boom.badData('Invalid Data', { attributes: errors })
-      } else {
-        const newUser = new User({
-          username: req.body.username,
-          password: req.body.password
-        })
-
-        bcrypt.genSalt(10, (err, salt) => {
-          if (err) throw err
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err
-            newUser.password = hash
-            newUser
-              .save()
-              .then(user => res.json(user))
-              .catch(err => {
-                logger.error(err)
-                res.boom.badImplementation('Server Error', { attributes: err })
-              })
-          })
-        })
-      }
-    })
-})
-
-router.post('/login', (req, res) => {
-  let { errors, isValid } = validateLoginInput(req.body)
-
-  // check validation
-  if (!isValid) {
-    return res.boom.badData('Invalid Data', { attributes: errors })
-  }
-
-  const username = req.body.username
-  const password = req.body.password
-
-  // find user by email
-  User.findOne({ username })
-    .then(user => {
-      // Check for user
-      if (!user) {
-        return res.boom.unauthorized('Username or Password is incorrect')
-      }
-
-      // check password
-      bcrypt.compare(password, user.password).then(isMatch => {
-        if (isMatch) {
-          // user matched
-          const payload = { id: user.id, username: user.username } // create JWT payload
-
-          // sign token
-          jwt.sign(
-            payload,
-            config.get('secretOrKey'),
-            { expiresIn: 604800 },
-            (err, token) => {
-              if (err) {
-                return res.boom.badImplementation('Internal Server Error')
-              }
+      User.findOne({ username: req.params.username })
+        .select('_id username')
+        .then(followUser => {
+          // check if user already follows the followUser
+          if (user.follows.includes(followUser._id)) {
+            return res.boom.conflict(
+              `User ${req.params.username} already followed`)
+          }
+          // push followUser._id to follows array
+          user.follows.push(followUser._id)
+          user.save()
+            .then(success => {
+              console.log('SUCCESS=====>', success)
               return res.json({
-                success: true,
-                token: token
+                message: `Followed ${followUser.username} successfully`
               })
             })
-        } else {
-          return res.boom.unauthorized('Username or Password is incorrect')
-        }
-      })
+            .catch(err => {
+              logger.error(err)
+              return res.boom.badImplementation('Please try again later')
+            })
+        })
+        .catch(err => {
+          logger.error(err)
+          return res.boom.badData(`User ${req.params.username} does not exist`)
+        })
+    })
+    .catch(err => {
+      logger.error(err)
+      return res.boom.badImplementation('Please try again later')
     })
 })
 
-router.get('/current', checkAuth, (req, res) => {
-  res.json({
-    id: req.user.id,
-    username: req.user.username
-  })
+router.get('/unfollow/:username', checkAuth, (req, res) => {
+  User.findOne({ username: req.user.username })
+    .select('_id username follows')
+    .then(user => {
+      // check if user exists
+      User.findOne({ username: req.params.username })
+        .select('_id username')
+        .then(unfollowUser => {
+          // check if user follows the unfollowUser
+          if (user.follows.includes(unfollowUser._id)) {
+            user.follows.splice(user.follows.indexOf(unfollowUser._id), 1)
+            user.save()
+            return res.json({
+              message: `Unfollowed ${unfollowUser.username} successfully`
+            })
+          } else {
+            return res.boom.badData(
+              `User ${req.params.username} not followed`)
+          }
+        })
+        .catch(err => {
+          logger.error(err)
+          return res.boom.badData(`User ${req.params.username} does not exist`)
+        })
+    })
+    .catch(err => {
+      logger.error(err)
+      return res.boom.badImplementation('Please try again later')
+    })
 })
 
 export default router

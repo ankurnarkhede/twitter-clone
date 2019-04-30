@@ -8,7 +8,7 @@ import mongoose from 'mongoose'
 import config from 'config'
 
 // import routes controllers
-import indexRouter from './routes/index'
+import authRouter from './routes/auth'
 import userRouter from './routes/user'
 
 var app = express()
@@ -29,7 +29,7 @@ mongoose
   .catch(err => logger.error(err))
 
 // define routes to controllers
-app.use('/', indexRouter)
+app.use('/auth', authRouter)
 app.use('/user', userRouter)
 
 // catch 404 and forward to error handler

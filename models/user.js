@@ -15,9 +15,13 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  avatar: {
-    type: String
-  }
+  follows: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      unique: true
+    }
+  ]
 }, { timestamps: true })
 
 module.exports = mongoose.model('users', UserSchema)
